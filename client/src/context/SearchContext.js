@@ -1,0 +1,42 @@
+import { createContext } from "react";
+import { useReducer } from "react";
+
+const INITIAL_STATE = {
+    city:undefined,
+    date:[],
+    options:{
+        adult:undefined,
+        children:undefined,
+        roo:undefined,
+    },
+};
+
+export const SearchContext = createContext(INITIAL_STATE)
+
+const SearchReducer = (state,action) => {
+    if(action.type === "NEW_SEARCH"){
+        return action.payload
+    }
+    else if(action.type === "RESET_SEARCH"){
+        return INITIAL_STATE
+    }else{
+        return state
+    }
+}
+
+export const SearchContextProvider = ({ children }) => {
+    const [state,dispatch] = useReducer(SearchReducer, INITIAL_STATE)
+
+    return (
+        <SearchContext.Provider value = {
+            {
+                city:state.city,
+                date:state.date,
+                options:state.options,
+                dispatch
+            }
+        }>
+            {children}    
+        </SearchContext.Provider>
+    )
+}
