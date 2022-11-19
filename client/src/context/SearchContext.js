@@ -3,11 +3,11 @@ import { useReducer } from "react";
 
 const INITIAL_STATE = {
     city:undefined,
-    date:[],
+    dates:[],
     options:{
         adult:undefined,
         children:undefined,
-        roo:undefined,
+        room:undefined,
     },
 };
 
@@ -31,7 +31,7 @@ export const SearchContextProvider = ({ children }) => {
         <SearchContext.Provider value = {
             {
                 city:state.city,
-                date:state.date,
+                dates:state.dates,
                 options:state.options,
                 dispatch
             }

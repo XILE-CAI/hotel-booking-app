@@ -10,6 +10,8 @@ import { format } from "date-fns"
 import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../context/SearchContext';
 import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext'
+
 
 const Header = ({type}) => {
   //setup destination
@@ -17,7 +19,7 @@ const Header = ({type}) => {
   //control calendar active
   const [openDate, setOpenDate] = useState(false)
   //use data range calendar
-  const [date, setDate] = useState([
+  const [dates, setDate] = useState([
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -45,10 +47,11 @@ const Header = ({type}) => {
 
   // useNavigate to list pages 
   const navigate = useNavigate()
-
+  const {user} = useContext(AuthContext)
+    
   const handleSearch = () => {
-    dispatch({type:"NEW_SEARCH",payload:{destination,date,options}})
-    navigate("/hotels",{state:{destination, date, options}})
+    dispatch({type:"NEW_SEARCH",payload:{destination,dates,options}})
+    navigate("/hotels",{state:{destination, dates, options}})
   }
 
   
@@ -88,7 +91,7 @@ const Header = ({type}) => {
               Get rewarded for your travels – unlock instant savings of 10% or
               more with a free booking account
             </p>
-            <button className="headerBtn">Sign in / Register</button>
+            {!user && <button className="headerBtn">Sign in / Register</button>}
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
@@ -101,12 +104,12 @@ const Header = ({type}) => {
               </div>
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faCalendarDays} className="headerIcon" />
-                <span onClick={() => {setOpenDate(!openDate)}} className='headerSearchText'>{`${format(date[0].startDate, "MM/dd/yyyy")} to ${format(date[0].endDate, "MM/dd/yyyy")}`}</span>
+                <span onClick={() => {setOpenDate(!openDate)}} className='headerSearchText'>{`${format(dates[0].startDate, "MM/dd/yyyy")} to ${format(dates[0].endDate, "MM/dd/yyyy")}`}</span>
                 {openDate && <DateRange
                     editableDateInputs={true}
                     onChange={(item) => setDate([item.selection])}
                     moveRangeOnFirstSelection={false}
-                    ranges={date}
+                    ranges={dates}
                     className="date"
                     minDate={new Date()}
                   />}
